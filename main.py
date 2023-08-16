@@ -28,10 +28,15 @@ data_loader = torch.utils.data.DataLoader(
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
 # DataLoader is iterable over Dataset
+i = 0
 for imgs, annotations in data_loader:
+    if i > 1:
+
+        break
     imgs = list(img.to(device) for img in imgs)
     annotations = [{k: v.to(device) for k, v in t.items()} for t in annotations]
     print(annotations)
+    i += 1
 
 
 model = get_model_instance_segmentation(config.num_classes)
@@ -64,3 +69,7 @@ for epoch in range(config.num_epochs):
         optimizer.step()
 
         print(f"Iteration: {i}/{len_dataloader}, Loss: {losses}")
+        if i > 1:
+            break
+
+model([my_dataset[0][2].cuda()])
